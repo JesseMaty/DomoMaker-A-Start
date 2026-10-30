@@ -25,10 +25,10 @@ const login = (req, res) => {
     // Authenticates password through account controller.
     return Account.authenticate(username, pass, (err, account) => {
         if(err || !account){
-            return res.status(401).json({error: 'Wrong username or passworod!'});
+            return res.status(401).json({error: 'Wrong username or password!'});
         };
 
-        // If account exisits, login and redirect to maker page
+        // If account exists, login and redirect to maker page
         return res.json({redirect: '/maker'});
     })
 };
