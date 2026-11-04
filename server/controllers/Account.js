@@ -10,6 +10,7 @@ const signupPage = (req, res) => {
 }
 
 const logout = (req, res) => {
+    req.session.destroy(); // Destroys the session on logout
     return res.redirect('/'); // Redirects to login page
 }
 
@@ -27,6 +28,8 @@ const login = (req, res) => {
         if(err || !account){
             return res.status(401).json({error: 'Wrong username or password!'});
         };
+
+        req.session.account = Account.toAPI(account);
 
         // If account exists, login and redirect to maker page
         return res.json({redirect: '/maker'});
@@ -54,6 +57,7 @@ const signup = async (req, res) => {
         const hash = await Account.generateHash(pass);
         const newAccount = new Account({username, password: hash});
         await newAccount.save();
+        req.session.account = Account.toAPI(newAccount);
 
         // Redirect to maker page on successful account creation
         return res.json({redirect: '/maker'})
